@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
-  Upload, FileText, BarChart2, Shield, Database, 
+  Upload, FileText, Database,
   Layers, CheckCircle, RefreshCw, Clock
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import SkeletonLoader from '../components/SkeletonLoader';
 import EmptyState from '../components/EmptyState';
+import { API_BASE_URL } from '../config';
 
 const Dashboard = () => {
   const { token, user } = useAuth();
@@ -22,11 +23,11 @@ const Dashboard = () => {
   const [recentDocs, setRecentDocs] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     setLoading(true);
     try {
       // 1. Fetch stats
-      const statsRes = await fetch('http://localhost:5000/api/documents/stats', {
+      const statsRes = await fetch(`${API_BASE_URL}/documents/stats`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const statsData = await statsRes.json();
@@ -34,7 +35,7 @@ const Dashboard = () => {
       setStats(statsData);
 
       // 2. Fetch recent docs (limit 5)
-      const docsRes = await fetch('http://localhost:5000/api/documents?limit=5', {
+      const docsRes = await fetch(`${API_BASE_URL}/documents?limit=5`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const docsData = await docsRes.json();
@@ -45,11 +46,11 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchDashboardData();
-  }, []);
+  }, [fetchDashboardData]);
 
   const formatSize = (bytes) => {
     if (bytes === 0) return '0 KB';
