@@ -30,4 +30,4 @@ USER finpilot
 EXPOSE 5000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
- CMD-SHELL wget -qO- http://localhost:${PORT:-5000}/api/health || exit 1
+ CMD Wget -qO- http://localhost:${PORT:-5000}/api/health || exit 1
