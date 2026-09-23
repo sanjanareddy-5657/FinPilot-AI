@@ -11,6 +11,7 @@ import {
 import toast from 'react-hot-toast';
 import SkeletonLoader from '../components/SkeletonLoader';
 import { exportAnalysisPDF } from '../utils/exportPDF';
+import { API_BASE_URL } from '../config';
 
 const DocumentDetails = () => {
   const { id } = useParams();
