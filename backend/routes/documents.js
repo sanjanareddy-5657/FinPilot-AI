@@ -146,7 +146,7 @@ function analyzeDocumentAsync(documentId, extractedText, extractedJson, statisti
        error_message = NULL,
        updated_at = CURRENT_TIMESTAMP`,
     [documentId],
-    (initErr) => {
+    async (initErr) => {
       if (initErr) {
         console.error(`Failed to init analysis for document ${documentId}:`, initErr.message);
         return;
@@ -156,7 +156,7 @@ function analyzeDocumentAsync(documentId, extractedText, extractedJson, statisti
         const jsonData = typeof extractedJson === 'string' ? JSON.parse(extractedJson) : extractedJson;
         const statsData = typeof statistics === 'string' ? JSON.parse(statistics) : statistics;
 
-        const result = analyzer.analyze(extractedText || '', jsonData || {}, statsData || {}, fileType);
+        const result = await analyzer.analyze(extractedText || '', jsonData || {}, statsData || {}, fileType);
         const analysisTime = Date.now() - startTime;
 
         db.run(
