@@ -173,7 +173,8 @@ ${JSON.stringify(extractedJson || {}).substring(0, 15000)}
     // Currency amount patterns: handles ₹, $, EUR, GBP, commas, decimals
     const extractAmount = (patterns) => {
       for (const pattern of patterns) {
-        const match = originalText.match(pattern);
+        const normalizedText = originalText.replace(/([A-Za-z])(?=\d)/g, '$1 ');
+        const match = normalizedText.match(pattern);
         if (match) {
           const raw = match[1] || match[2] || match[0];
           const num = parseFloat(raw.replace(/[₹$€£,\s]/g, ''));
